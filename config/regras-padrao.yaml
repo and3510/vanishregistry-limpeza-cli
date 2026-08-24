@@ -1,0 +1,57 @@
+# ============================================================
+#  Arquivo de regras do Registry Cleaner CLI
+#  Todos os campos marcados como OBRIGATÓRIO precisam ser
+#  preenchidos. Os demais são opcionais.
+# ============================================================
+
+# OBRIGATÓRIO — Ambiente de execução: "docker" ou "k3s"
+ambiente: "docker"
+
+# OBRIGATÓRIO — URL base do registry (sem barra no final)
+url_registry: "https://app.docker.com"
+
+# OBRIGATÓRIO — Nome do container (Docker) ou label do pod (K3s)
+alvo: "registry"
+
+padroes_de_data:
+  # Padrão Principal (Ex: 0.0.1-homolog-20260615-081848)
+  - regex: '(\d{8}-\d{6})'
+    layout: '20060102-150405'
+  
+  # Padrão Curto (Ex: 20251013-1306)
+  - regex: '(\d{8}-\d{4})'
+    layout: '20060102-1504'
+    
+  # Padrão Contínuo 12 dígitos (Ex: 202604071208)
+  - regex: '(\d{12})'
+    layout: '200601021504'
+
+  # Padrão Antigo com letras (Ex: 2026-06-07_21h01m)
+  - regex: '(\d{4}-\d{2}-\d{2}_\d{2}h\d{2}m)'
+    layout: '2006-01-02_15h04m'
+
+  # --- OS DOIS PADRÕES EXTRAS DE PRODUÇÃO ---
+
+  # Padrão com Ponto (Ex: 1.0.0-20260415.235036)
+  - regex: '(\d{8}\.\d{6})'
+    layout: '20060102.150405'
+  
+  # Padrão Contínuo 14 dígitos (Ex: 20260310092833)
+  - regex: '(\d{14})'
+    layout: '20060102150405'
+
+# Quantidade de tags mais recentes para MANTER por repositório
+limite_manter: 3
+
+# Namespace do K3s onde o pod do registry roda (só usado se ambiente = k3s)
+namespace_k8s: "default"
+
+# Tags que NUNCA serão apagadas, independente da data
+tags_protegidas:
+  - "latest"
+  - "stable"
+
+# OPCIONAL — Credenciais de autenticação do registry
+# Deixe em branco ou remova se o registry não exigir autenticação
+usuario: ""
+senha: ""
